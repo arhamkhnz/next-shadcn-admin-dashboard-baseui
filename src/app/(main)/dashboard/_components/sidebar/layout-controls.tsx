@@ -39,7 +39,8 @@ export function LayoutControls() {
   const font = usePreferencesStore((s) => s.font);
   const setFont = usePreferencesStore((s) => s.setFont);
 
-  const onThemePresetChange = async (preset: ThemePreset) => {
+  const onThemePresetChange = async (preset: ThemePreset | null) => {
+    if (!preset) return;
     applyThemePreset(preset);
     setThemePreset(preset);
     persistPreference("theme_preset", preset);
@@ -79,7 +80,7 @@ export function LayoutControls() {
     persistPreference("sidebar_collapsible", value);
   };
 
-  const onFontChange = async (value: FontKey | "") => {
+  const onFontChange = async (value: FontKey | null) => {
     if (!value) return;
     applyFont(value);
     setFont(value);
@@ -98,10 +99,8 @@ export function LayoutControls() {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button size="icon">
-          <Settings />
-        </Button>
+      <PopoverTrigger render={<Button size="icon" />}>
+        <Settings />
       </PopoverTrigger>
       <PopoverContent align="end">
         <div className="flex flex-col gap-5">
@@ -155,11 +154,9 @@ export function LayoutControls() {
             <div className="space-y-1">
               <Label className="font-medium text-xs">Theme Mode</Label>
               <ToggleGroup
-                size="sm"
                 variant="outline"
-                type="single"
-                value={themeMode}
-                onValueChange={onThemeModeChange}
+                defaultValue={[themeMode]}
+                onValueChange={(groupValue) => onThemeModeChange((groupValue[0] as ThemeMode) ?? "")}
               >
                 <ToggleGroupItem value="light" aria-label="Toggle light">
                   Light
@@ -178,9 +175,9 @@ export function LayoutControls() {
               <ToggleGroup
                 size="sm"
                 variant="outline"
-                type="single"
-                value={contentLayout}
-                onValueChange={onContentLayoutChange}
+                multiple={false}
+                defaultValue={[contentLayout]}
+                onValueChange={(groupValue) => onContentLayoutChange((groupValue[0] as ContentLayout) ?? "")}
               >
                 <ToggleGroupItem value="centered" aria-label="Toggle centered">
                   Centered
@@ -196,9 +193,9 @@ export function LayoutControls() {
               <ToggleGroup
                 size="sm"
                 variant="outline"
-                type="single"
-                value={navbarStyle}
-                onValueChange={onNavbarStyleChange}
+                multiple={false}
+                defaultValue={[navbarStyle]}
+                onValueChange={(groupValue) => onNavbarStyleChange((groupValue[0] as NavbarStyle) ?? "")}
               >
                 <ToggleGroupItem value="sticky" aria-label="Toggle sticky">
                   Sticky
@@ -214,9 +211,9 @@ export function LayoutControls() {
               <ToggleGroup
                 size="sm"
                 variant="outline"
-                type="single"
-                value={variant}
-                onValueChange={onSidebarStyleChange}
+                multiple={false}
+                defaultValue={[variant]}
+                onValueChange={(groupValue) => onSidebarStyleChange((groupValue[0] as SidebarVariant) ?? "")}
               >
                 <ToggleGroupItem value="inset" aria-label="Toggle inset">
                   Inset
@@ -235,9 +232,9 @@ export function LayoutControls() {
               <ToggleGroup
                 size="sm"
                 variant="outline"
-                type="single"
-                value={collapsible}
-                onValueChange={onSidebarCollapseModeChange}
+                multiple={false}
+                defaultValue={[collapsible]}
+                onValueChange={(groupValue) => onSidebarCollapseModeChange((groupValue[0] as SidebarCollapsible) ?? "")}
               >
                 <ToggleGroupItem value="icon" aria-label="Toggle icon">
                   Icon
