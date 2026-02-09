@@ -65,8 +65,9 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         title: "Analytics",
-        url: "/dashboard/analytics",
+        url: "/dashboard/coming-soon",
         icon: Gauge,
+        comingSoon: true,
       },
       {
         title: "E-commerce",
