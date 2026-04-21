@@ -10,8 +10,8 @@ I’ve taken design inspiration from various sources. If you’d like credit for
 
 > **View demo:** [studio admin](https://next-shadcn-admin-dashboard-baseui.vercel.app/)
 
-> Looking for the **Radix version**?  
-> Check out [next-shadcn-admin-dashboard](https://github.com/arhamkhnz/next-shadcn-admin-dashboard).
+> [!NOTE]
+> Looking for the Radix UI version? Check out [next-shadcn-admin-dashboard](https://github.com/arhamkhnz/next-shadcn-admin-dashboard).
 
 > [!TIP]
 > I’m also working on Nuxt.js, Svelte, and React (Vite + TanStack Router) versions of this dashboard. They’ll be live soon.
