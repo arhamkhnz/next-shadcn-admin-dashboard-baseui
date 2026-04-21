@@ -1,6 +1,6 @@
 # Contributing to Studio Admin
 
-Thanks for showing interest in improving **Studio Admin** (repo: `next-shadcn-admin-dashboard`).  
+Thanks for showing interest in improving **Studio Admin** (repo: `next-shadcn-admin-dashboard-baseui`).  
 This guide will help you set up your environment and understand how to contribute.
 
 ---
@@ -44,16 +44,16 @@ If you’d like a more detailed example of this setup, check out the [Next Coloc
 
 1. Fork the Repository
    
-   Click [here](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/fork) to fork the repository.
+   Click [here](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui/fork) to fork the repository.
 
 2. Clone the Repository  
    ```bash
-   git clone https://github.com/YOUR_USERNAME/next-shadcn-admin-dashboard.git
+   git clone https://github.com/YOUR_USERNAME/next-shadcn-admin-dashboard-baseui.git
    ```
    
 3. Navigate into the Project  
    ```bash
-   cd next-shadcn-admin-dashboard
+   cd next-shadcn-admin-dashboard-baseui
    ```
 
 4. **Install dependencies**
@@ -118,7 +118,7 @@ If you’d like a more detailed example of this setup, check out the [Next Coloc
 
 ## Questions & Support
 
-- Report bugs, suggestions, or issues via [GitHub Issues](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/issues)
+- Report bugs, suggestions, or issues via [GitHub Issues](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui/issues)
 
 ---
 

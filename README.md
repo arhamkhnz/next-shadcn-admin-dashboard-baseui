@@ -2,13 +2,16 @@
 
 **Studio Admin** - Includes multiple dashboards, authentication layouts, customizable theme presets, and more.
 
-<img src="https://github.com/arhamkhnz/next-shadcn-admin-dashboard/blob/main/media/dashboard.png?version=5" alt="Dashboard Screenshot">
+<img src="https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui/blob/main/media/dashboard.png?version=5" alt="Dashboard Screenshot">
 
 Most admin templates I found, free or paid, felt cluttered, outdated, or too rigid. I built this as a cleaner alternative with features often missing in others, such as theme toggling and layout controls, while keeping the design modern, minimal, and flexible.
 
 I’ve taken design inspiration from various sources. If you’d like credit for something specific, feel free to open an issue or reach out.
 
-> **View demo:** [studio admin](https://next-shadcn-admin-dashboard.vercel.app)
+> **View demo:** [studio admin](https://next-shadcn-admin-dashboard-baseui.vercel.app/)
+
+> Looking for the **Radix version**?  
+> Check out [next-shadcn-admin-dashboard](https://github.com/arhamkhnz/next-shadcn-admin-dashboard).
 
 > [!TIP]
 > I’m also working on Nuxt.js, Svelte, and React (Vite + TanStack Router) versions of this dashboard. They’ll be live soon.
@@ -32,14 +35,6 @@ I’ve taken design inspiration from various sources. If you’d like credit for
 > - Soft Pop  
 >
 > You can create more presets by following the same structure as the existing ones.
-
-> Looking for the **Next.js 15** version?  
-> Check out the [`archive/next15`](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/tree/archive/next15) branch.  
-> This branch contains the setup prior to upgrading to Next 16 and the React Compiler.
-
-> Looking for the **Next.js 14 + Tailwind CSS v3** version?  
-> Check out the [`archive/next14-tailwindv3`](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/tree/archive/next14-tailwindv3) branch.  
-> It has a different color theme and is not actively maintained, but I try to keep it updated with major changes.  
 
 ## Tech Stack
 
@@ -86,7 +81,7 @@ You can run this project locally, or deploy it instantly with Vercel.
 
 ### Deploy with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Farhamkhnz%2Fnext-shadcn-admin-dashboard)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Farhamkhnz%2Fnext-shadcn-admin-dashboard-baseui)
 
 _Deploy your own copy with one click._
 
@@ -94,12 +89,12 @@ _Deploy your own copy with one click._
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/arhamkhnz/next-shadcn-admin-dashboard.git
+   git clone https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui.git
    ```
    
 2. **Navigate into the project**
    ```bash
-    cd next-shadcn-admin-dashboard
+    cd next-shadcn-admin-dashboard-baseui
    ```
    
 3. **Install dependencies**
