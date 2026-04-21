@@ -10,6 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -44,14 +45,26 @@ const NavItemExpanded = ({
   isActive: (url: string, subItems?: NavMainItem["subItems"]) => boolean;
   isSubmenuOpen: (subItems?: NavMainItem["subItems"]) => boolean;
 }) => {
+  if (!item.subItems) {
+    return (
+      <SidebarMenuItem key={item.title}>
+        <SidebarMenuButton
+          render={<Link prefetch={false} href={item.url} target={item.newTab ? "_blank" : undefined} />}
+          aria-disabled={item.comingSoon}
+          isActive={isActive(item.url)}
+          tooltip={item.title}
+        >
+          {item.icon && <item.icon />}
+          <span>{item.title}</span>
+          {item.comingSoon && <IsComingSoon />}
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }
+
   return (
-    <Collapsible
-      key={item.title}
-      render={<SidebarMenuItem />}
-      defaultOpen={isSubmenuOpen(item.subItems)}
-      className="group/collapsible"
-    >
-      {item.subItems ? (
+    <SidebarMenuItem key={item.title}>
+      <Collapsible defaultOpen={isSubmenuOpen(item.subItems)} className="group/collapsible">
         <CollapsibleTrigger
           render={
             <SidebarMenuButton
@@ -64,21 +77,8 @@ const NavItemExpanded = ({
           {item.icon && <item.icon />}
           <span>{item.title}</span>
           {item.comingSoon && <IsComingSoon />}
-          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+          <ChevronRight className="ml-auto transition-transform duration-200 group-data-panel-open/menu-button:rotate-90" />
         </CollapsibleTrigger>
-      ) : (
-        <SidebarMenuButton
-          render={<Link prefetch={false} href={item.url} target={item.newTab ? "_blank" : undefined} />}
-          aria-disabled={item.comingSoon}
-          isActive={isActive(item.url)}
-          tooltip={item.title}
-        >
-          {item.icon && <item.icon />}
-          <span>{item.title}</span>
-          {item.comingSoon && <IsComingSoon />}
-        </SidebarMenuButton>
-      )}
-      {item.subItems && (
         <CollapsibleContent>
           <SidebarMenuSub>
             {item.subItems.map((subItem) => (
@@ -96,8 +96,8 @@ const NavItemExpanded = ({
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>
-      )}
-    </Collapsible>
+      </Collapsible>
+    </SidebarMenuItem>
   );
 };
 
@@ -125,23 +125,26 @@ const NavItemCollapsed = ({
           <ChevronRight />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-50 space-y-1" side="right" align="start">
-          {item.subItems?.map((subItem) => (
-            <DropdownMenuItem
-              key={subItem.title}
-              render={
-                <SidebarMenuSubButton
-                  className="focus-visible:ring-0"
-                  aria-disabled={subItem.comingSoon}
-                  isActive={isActive(subItem.url)}
-                  render={<Link prefetch={false} href={subItem.url} target={subItem.newTab ? "_blank" : undefined} />}
-                />
-              }
-            >
-              {subItem.icon && <subItem.icon className="[&>svg]:text-sidebar-foreground" />}
-              <span>{subItem.title}</span>
-              {subItem.comingSoon && <IsComingSoon />}
-            </DropdownMenuItem>
-          ))}
+          <DropdownMenuGroup>
+            {item.subItems?.map((subItem) => (
+              <DropdownMenuItem
+                key={subItem.title}
+                render={
+                  <SidebarMenuSubButton
+                    href={subItem.url}
+                    target={subItem.newTab ? "_blank" : undefined}
+                    className="focus-visible:ring-0"
+                    aria-disabled={subItem.comingSoon}
+                    isActive={isActive(subItem.url)}
+                  />
+                }
+              >
+                {subItem.icon && <subItem.icon className="[&>svg]:text-sidebar-foreground" />}
+                <span>{subItem.title}</span>
+                {subItem.comingSoon && <IsComingSoon />}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

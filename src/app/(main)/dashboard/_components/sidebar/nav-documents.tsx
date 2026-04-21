@@ -38,7 +38,7 @@ export function NavDocuments({
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
               render={(props) => (
-                <a {...props} href={item.url}>
+                <a {...props} href={item.url} aria-label={item.name}>
                   {props.children}
                 </a>
               )}
@@ -48,7 +48,7 @@ export function NavDocuments({
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={<SidebarMenuAction showOnHover className="rounded-sm data-[state=open]:bg-accent" />}
+                render={<SidebarMenuAction showOnHover className="rounded-sm data-popup-open:bg-accent" />}
               >
                 <Ellipsis />
                 <span className="sr-only">More</span>
