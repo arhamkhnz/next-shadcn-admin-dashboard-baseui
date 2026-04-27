@@ -35,13 +35,6 @@ const chartConfig = {
   },
 } as ChartConfig;
 
-const cashFlowPeriodItems = [
-  { value: "this-month", label: "This Month" },
-  { value: "last-6-months", label: "Last 6 Months" },
-  { value: "ytd", label: "Year to Date" },
-  { value: "this-year", label: "This Year" },
-] as const;
-
 export function CashFlowOverview() {
   const totalIncome = chartData.reduce((acc, item) => acc + item.income, 0);
   const totalExpenses = chartData.reduce((acc, item) => acc + Math.abs(item.expenses), 0);
@@ -51,17 +44,16 @@ export function CashFlowOverview() {
         <CardTitle>Cash Flow Overview</CardTitle>
         <CardDescription>Monthly income and expenses with net cash impact.</CardDescription>
         <CardAction>
-          <Select defaultValue="this-year" items={cashFlowPeriodItems}>
+          <Select defaultValue="this-year">
             <SelectTrigger size="sm" className="w-37">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {cashFlowPeriodItems.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                ))}
+                <SelectItem value="this-month">This Month</SelectItem>
+                <SelectItem value="last-6-months">Last 6 Months</SelectItem>
+                <SelectItem value="ytd">Year to Date</SelectItem>
+                <SelectItem value="this-year">This Year</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
