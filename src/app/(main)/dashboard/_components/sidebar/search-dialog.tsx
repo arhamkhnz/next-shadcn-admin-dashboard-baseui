@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 import { Search } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -22,6 +21,7 @@ import type { NavMainItem } from "@/navigation/sidebar/sidebar-items";
 import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
 
 type SearchItem = {
+  id: string;
   group: string;
   label: string;
   url: string;
@@ -40,21 +40,23 @@ const searchItems: SearchItem[] = sidebarItems.flatMap((group) =>
   group.items.flatMap((item) => {
     if (item.subItems) {
       return item.subItems.map((sub) => ({
+        id: sub.id,
         group: getSubItemGroup(group.label, item.title),
         label: sub.title,
         url: sub.url,
         icon: item.icon,
-        disabled: sub.comingSoon,
+        disabled: sub.disabled,
         newTab: sub.newTab,
       }));
     }
     return [
       {
+        id: item.id,
         group: group.label ?? "Other",
         label: item.title,
         url: item.url,
         icon: item.icon,
-        disabled: item.comingSoon,
+        disabled: item.disabled,
         newTab: item.newTab,
       },
     ];
@@ -114,18 +116,14 @@ export function SearchDialog() {
           {groupItems.map((item) => (
             <CommandItem
               disabled={item.disabled}
-              key={`${group}-${item.url}-${item.label}`}
+              key={`${group}-${item.id}`}
               value={`${item.group} ${item.label}`}
               onSelect={() => handleSelect(item)}
             >
-              {item.icon && <item.icon />}
-              <span>{item.label}</span>
-
-              {item.disabled && (
-                <Badge variant="outline" className="text-xs">
-                  Soon
-                </Badge>
-              )}
+              <span className="flex min-w-0 items-center gap-2">
+                {item.icon && <item.icon />}
+                <span className="truncate">{item.label}</span>
+              </span>
             </CommandItem>
           ))}
         </CommandGroup>
