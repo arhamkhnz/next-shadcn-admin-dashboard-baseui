@@ -1,6 +1,7 @@
 "use client";
 
 import { Settings } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -9,35 +10,29 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { type FontKey, fontOptions } from "@/lib/fonts/registry";
 import type { ContentLayout, NavbarStyle, SidebarCollapsible, SidebarVariant } from "@/lib/preferences/layout";
-import {
-  applyContentLayout,
-  applyFont,
-  applyNavbarStyle,
-  applySidebarCollapsible,
-  applySidebarVariant,
-} from "@/lib/preferences/layout-utils";
-import { PREFERENCE_DEFAULTS } from "@/lib/preferences/preferences-config";
-import { persistPreference } from "@/lib/preferences/preferences-storage";
 import { THEME_PRESET_OPTIONS, type ThemeMode, type ThemePreset } from "@/lib/preferences/theme";
-import { applyThemePreset } from "@/lib/preferences/theme-utils";
 import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 
 export function LayoutControls() {
-  const themeMode = usePreferencesStore((s) => s.themeMode);
-  const resolvedThemeMode = usePreferencesStore((s) => s.resolvedThemeMode);
-  const setThemeMode = usePreferencesStore((s) => s.setThemeMode);
-  const themePreset = usePreferencesStore((s) => s.themePreset);
-  const setThemePreset = usePreferencesStore((s) => s.setThemePreset);
-  const contentLayout = usePreferencesStore((s) => s.contentLayout);
-  const setContentLayout = usePreferencesStore((s) => s.setContentLayout);
-  const navbarStyle = usePreferencesStore((s) => s.navbarStyle);
-  const setNavbarStyle = usePreferencesStore((s) => s.setNavbarStyle);
-  const variant = usePreferencesStore((s) => s.sidebarVariant);
-  const setSidebarVariant = usePreferencesStore((s) => s.setSidebarVariant);
-  const collapsible = usePreferencesStore((s) => s.sidebarCollapsible);
-  const setSidebarCollapsible = usePreferencesStore((s) => s.setSidebarCollapsible);
-  const font = usePreferencesStore((s) => s.font);
-  const setFont = usePreferencesStore((s) => s.setFont);
+  const { values, resolvedThemeMode, setPreference, resetPreferences } = usePreferencesStore(
+    useShallow((state) => ({
+      values: state.values,
+      resolvedThemeMode: state.resolvedThemeMode,
+      setPreference: state.setPreference,
+      resetPreferences: state.resetPreferences,
+    })),
+  );
+
+  const {
+    theme_mode: themeMode,
+    theme_preset: themePreset,
+    content_layout: contentLayout,
+    navbar_style: navbarStyle,
+    sidebar_variant: variant,
+    sidebar_collapsible: collapsible,
+    font,
+  } = values;
+
   const themePresetItems = THEME_PRESET_OPTIONS.map((preset) => ({
     value: preset.value,
     label: (
@@ -57,57 +52,13 @@ export function LayoutControls() {
     label: option.label,
   }));
 
-  const getSingleToggleValue = <T extends string>(groupValue: string[]) => groupValue[0] as T | undefined;
-
   const onThemePresetChange = (preset: ThemePreset) => {
-    applyThemePreset(preset);
-    setThemePreset(preset);
-    void persistPreference("theme_preset", preset);
+    setPreference("theme_preset", preset);
   };
 
-  const onThemeModeChange = (mode: ThemeMode) => {
-    setThemeMode(mode);
-    void persistPreference("theme_mode", mode);
-  };
-
-  const onContentLayoutChange = (layout: ContentLayout) => {
-    applyContentLayout(layout);
-    setContentLayout(layout);
-    void persistPreference("content_layout", layout);
-  };
-
-  const onNavbarStyleChange = (style: NavbarStyle) => {
-    applyNavbarStyle(style);
-    setNavbarStyle(style);
-    void persistPreference("navbar_style", style);
-  };
-
-  const onSidebarStyleChange = (value: SidebarVariant) => {
-    setSidebarVariant(value);
-    applySidebarVariant(value);
-    void persistPreference("sidebar_variant", value);
-  };
-
-  const onSidebarCollapseModeChange = (value: SidebarCollapsible) => {
-    setSidebarCollapsible(value);
-    applySidebarCollapsible(value);
-    void persistPreference("sidebar_collapsible", value);
-  };
-
-  const onFontChange = (value: FontKey) => {
-    applyFont(value);
-    setFont(value);
-    void persistPreference("font", value);
-  };
-
-  const handleRestore = () => {
-    onThemePresetChange(PREFERENCE_DEFAULTS.theme_preset);
-    onThemeModeChange(PREFERENCE_DEFAULTS.theme_mode);
-    onContentLayoutChange(PREFERENCE_DEFAULTS.content_layout);
-    onNavbarStyleChange(PREFERENCE_DEFAULTS.navbar_style);
-    onSidebarStyleChange(PREFERENCE_DEFAULTS.sidebar_variant);
-    onSidebarCollapseModeChange(PREFERENCE_DEFAULTS.sidebar_collapsible);
-    onFontChange(PREFERENCE_DEFAULTS.font);
+  const onFontChange = (value: FontKey | "") => {
+    if (!value) return;
+    setPreference("font", value);
   };
 
   return (
@@ -144,7 +95,7 @@ export function LayoutControls() {
                             className="size-2.5 rounded-full"
                             style={{
                               backgroundColor:
-                                (resolvedThemeMode ?? "light") === "dark" ? preset.primary.dark : preset.primary.light,
+                                resolvedThemeMode === "dark" ? preset.primary.dark : preset.primary.light,
                             }}
                           />
                           {preset.label}
@@ -188,10 +139,9 @@ export function LayoutControls() {
                 spacing={0}
                 variant="outline"
                 value={[themeMode]}
-                onValueChange={(value) => {
-                  const mode = getSingleToggleValue<ThemeMode>(value);
+                onValueChange={([mode]) => {
                   if (!mode) return;
-                  void onThemeModeChange(mode);
+                  setPreference("theme_mode", mode as ThemeMode);
                 }}
               >
                 <ToggleGroupItem value="light" aria-label="Toggle light">
@@ -213,10 +163,9 @@ export function LayoutControls() {
                 spacing={0}
                 variant="outline"
                 value={[contentLayout]}
-                onValueChange={(value) => {
-                  const layout = getSingleToggleValue<ContentLayout>(value);
+                onValueChange={([layout]) => {
                   if (!layout) return;
-                  void onContentLayoutChange(layout);
+                  setPreference("content_layout", layout as ContentLayout);
                 }}
               >
                 <ToggleGroupItem value="centered" aria-label="Toggle centered">
@@ -235,10 +184,9 @@ export function LayoutControls() {
                 spacing={0}
                 variant="outline"
                 value={[navbarStyle]}
-                onValueChange={(value) => {
-                  const style = getSingleToggleValue<NavbarStyle>(value);
+                onValueChange={([style]) => {
                   if (!style) return;
-                  void onNavbarStyleChange(style);
+                  setPreference("navbar_style", style as NavbarStyle);
                 }}
               >
                 <ToggleGroupItem value="sticky" aria-label="Toggle sticky">
@@ -257,10 +205,9 @@ export function LayoutControls() {
                 spacing={0}
                 variant="outline"
                 value={[variant]}
-                onValueChange={(value) => {
-                  const nextVariant = getSingleToggleValue<SidebarVariant>(value);
+                onValueChange={([nextVariant]) => {
                   if (!nextVariant) return;
-                  void onSidebarStyleChange(nextVariant);
+                  setPreference("sidebar_variant", nextVariant as SidebarVariant);
                 }}
               >
                 <ToggleGroupItem value="inset" aria-label="Toggle inset">
@@ -282,10 +229,9 @@ export function LayoutControls() {
                 spacing={0}
                 variant="outline"
                 value={[collapsible]}
-                onValueChange={(value) => {
-                  const nextCollapsible = getSingleToggleValue<SidebarCollapsible>(value);
+                onValueChange={([nextCollapsible]) => {
                   if (!nextCollapsible) return;
-                  void onSidebarCollapseModeChange(nextCollapsible);
+                  setPreference("sidebar_collapsible", nextCollapsible as SidebarCollapsible);
                 }}
               >
                 <ToggleGroupItem value="icon" aria-label="Toggle icon">
@@ -297,7 +243,7 @@ export function LayoutControls() {
               </ToggleGroup>
             </div>
 
-            <Button type="button" size="sm" variant="outline" className="w-full text-xs" onClick={handleRestore}>
+            <Button type="button" size="sm" variant="outline" className="w-full text-xs" onClick={resetPreferences}>
               Restore Defaults
             </Button>
           </div>
