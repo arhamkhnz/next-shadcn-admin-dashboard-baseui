@@ -104,18 +104,16 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
   const isMobile = useIsMobile();
 
   return (
-    <Drawer direction={isMobile ? "bottom" : "right"}>
-      <DrawerTrigger asChild>
-        <Button variant="link" className="w-fit px-0 text-left text-foreground">
-          {item.header}
-        </Button>
+    <Drawer swipeDirection={isMobile ? "down" : "right"}>
+      <DrawerTrigger render={<Button variant="link" className="w-fit px-0 text-left text-foreground" />}>
+        {item.header}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.header}</DrawerTitle>
           <DrawerDescription>Showing total visitors for the last 6 months</DrawerDescription>
         </DrawerHeader>
-        <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 text-sm">
           {!isMobile && (
             <>
               <ChartContainer config={chartConfig}>
@@ -240,9 +238,7 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
         </div>
         <DrawerFooter>
           <Button>Submit</Button>
-          <DrawerClose asChild>
-            <Button variant="outline">Done</Button>
-          </DrawerClose>
+          <DrawerClose render={<Button variant="outline" />}>Done</DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
