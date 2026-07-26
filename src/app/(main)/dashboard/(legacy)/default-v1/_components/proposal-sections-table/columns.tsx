@@ -6,7 +6,6 @@ import type { ColumnDef, Row } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { CircleCheckIcon, EllipsisVerticalIcon, GripVerticalIcon, LoaderIcon, TrendingUpIcon } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +33,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { toast } from "@/components/ui/toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import type { ProposalSectionsRow } from "./schema";
@@ -248,7 +248,7 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
 function createInlineSaveHandler(header: string) {
   return (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
+    void toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
       loading: `Saving ${header}`,
       success: "Done",
       error: "Error",
