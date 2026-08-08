@@ -1,4 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import { Subscribe } from "@tanstack/react-table";
 import { format, parseISO } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 
@@ -13,6 +14,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { DataTableFeatures } from "@/lib/data-table-features";
 
 import type { OrderRow } from "./schema";
 
@@ -83,25 +85,34 @@ function FulfillmentBadge({ status }: { status: OrderRow["fulfillment"] }) {
   );
 }
 
-export const recentOrdersColumns: ColumnDef<OrderRow>[] = [
+export const recentOrdersColumns: ColumnDef<DataTableFeatures, OrderRow>[] = [
   {
     id: "select",
     header: ({ table }) => (
       <div className="w-10">
-        <Checkbox
-          aria-label="Select all orders"
-          checked={table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        />
+        <Subscribe source={table.atoms.rowSelection}>
+          {() => (
+            <Checkbox
+              aria-label="Select all orders"
+              checked={table.getIsAllPageRowsSelected()}
+              indeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
+              onCheckedChange={(value) => table.toggleAllPageRowsSelected(value)}
+            />
+          )}
+        </Subscribe>
       </div>
     ),
     cell: ({ row }) => (
       <div className="w-10">
-        <Checkbox
-          aria-label={`Select order ${row.original.id}`}
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-        />
+        <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
+          {(checked) => (
+            <Checkbox
+              aria-label={`Select order ${row.original.id}`}
+              checked={checked}
+              onCheckedChange={(value) => row.toggleSelected(value)}
+            />
+          )}
+        </Subscribe>
       </div>
     ),
     enableHiding: false,

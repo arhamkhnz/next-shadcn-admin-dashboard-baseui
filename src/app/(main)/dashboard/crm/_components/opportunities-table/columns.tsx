@@ -1,12 +1,13 @@
 "use client";
-"use no memo";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { Subscribe } from "@tanstack/react-table";
 import { Pencil } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { DataTableFeatures } from "@/lib/data-table-features";
 import { cn } from "@/lib/utils";
 
 import type { OpportunityRow } from "./schema";
@@ -31,22 +32,31 @@ function getHealthScore(health: OpportunityRow["health"]) {
   }
 }
 
-export const opportunitiesColumns: ColumnDef<OpportunityRow>[] = [
+export const opportunitiesColumns: ColumnDef<DataTableFeatures, OpportunityRow>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all opportunities"
-      />
+      <Subscribe source={table.atoms.rowSelection}>
+        {() => (
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            indeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(value)}
+            aria-label="Select all opportunities"
+          />
+        )}
+      </Subscribe>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label={`Select ${row.original.account}`}
-      />
+      <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
+        {(checked) => (
+          <Checkbox
+            checked={checked}
+            onCheckedChange={(value) => row.toggleSelected(value)}
+            aria-label={`Select ${row.original.account}`}
+          />
+        )}
+      </Subscribe>
     ),
     enableHiding: false,
   },

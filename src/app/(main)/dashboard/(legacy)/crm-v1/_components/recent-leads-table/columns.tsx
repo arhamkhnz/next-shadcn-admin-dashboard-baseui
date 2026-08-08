@@ -1,7 +1,7 @@
 "use client";
-"use no memo";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { Subscribe } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,28 +15,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { DataTableFeatures } from "@/lib/data-table-features";
 
 import type { RecentLeadRow } from "./schema";
 
-export const recentLeadsColumns: ColumnDef<RecentLeadRow>[] = [
+export const recentLeadsColumns: ColumnDef<DataTableFeatures, RecentLeadRow>[] = [
   {
     id: "select",
     header: ({ table }) => (
       <div className="flex items-center justify-center">
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
+        <Subscribe source={table.atoms.rowSelection}>
+          {() => (
+            <Checkbox
+              checked={table.getIsAllPageRowsSelected()}
+              indeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
+              onCheckedChange={(value) => table.toggleAllPageRowsSelected(value)}
+              aria-label="Select all"
+            />
+          )}
+        </Subscribe>
       </div>
     ),
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
+        <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
+          {(checked) => (
+            <Checkbox
+              checked={checked}
+              onCheckedChange={(value) => row.toggleSelected(value)}
+              aria-label="Select row"
+            />
+          )}
+        </Subscribe>
       </div>
     ),
     enableHiding: false,
