@@ -61,7 +61,7 @@ Most admin templates I found, free or paid, felt cluttered, outdated, or too rig
 - Infrastructure Dashboard  
 - File Manager  
 - Patient Monitoring  
-- Profile Screen  
+- Profile  
 - Email Page  
 - Chat Page  
 - Calendar Page  
