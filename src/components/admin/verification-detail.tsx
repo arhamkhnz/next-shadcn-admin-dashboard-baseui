@@ -1,12 +1,13 @@
 "use client";
 
-import { Check, ExternalLink, ShieldCheck, X } from "lucide-react";
+import { Check, ShieldCheck, X } from "lucide-react";
 import useSWR from "swr";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { displayValue } from "@/lib/display";
 
+import { DocumentFileActions } from "./document-file-actions";
 import { PageHeader } from "./page-header";
 import { StatusBadge } from "./status-badge";
 
@@ -44,13 +45,6 @@ export function VerificationDetail({ driverId }: { driverId: string }) {
       { method: "PATCH", headers: body ? { "Content-Type": "application/json" } : undefined, body },
     );
     if (response.ok) await mutate();
-  }
-  async function view(documentId: string) {
-    const response = await fetch(`/api/backend/drivers/verification/documents/${encodeURIComponent(documentId)}/url`, {
-      cache: "no-store",
-    });
-    const body = await response.json();
-    if (response.ok && body.url) window.open(body.url, "_blank", "noopener,noreferrer");
   }
   async function verifyDriver() {
     const response = await fetch(`/api/backend/drivers/verification/${safe}/verify`, { method: "PATCH" });
@@ -102,10 +96,7 @@ export function VerificationDetail({ driverId }: { driverId: string }) {
                   <dd>{displayValue(document.rejectionReason)}</dd>
                 </dl>
                 <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" onClick={() => view(document.id)}>
-                    <ExternalLink />
-                    Open document
-                  </Button>
+                  <DocumentFileActions document={document} labelKeys={["documentType"]} />
                   <Button onClick={() => mutateDocument(document.id, "approve")}>
                     <Check />
                     Approve

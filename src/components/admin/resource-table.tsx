@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { type ReactNode, useDeferredValue, useMemo, useState } from "react";
 
 import Link from "next/link";
 
@@ -31,6 +31,7 @@ export function ResourceTable({
   onActionCompleted,
   exportFilename = "liftngo-records",
   linkedColumns,
+  renderRowActions,
 }: {
   rows: Record<string, unknown>[];
   columns: string[];
@@ -43,6 +44,7 @@ export function ResourceTable({
   onActionCompleted?: () => void | Promise<void>;
   exportFilename?: string;
   linkedColumns?: Record<string, LinkedResourceColumn>;
+  renderRowActions?: (row: Record<string, unknown>) => ReactNode;
 }) {
   const [layout, setLayout] = usePersistentLayout();
   const [query, setQuery] = useState("");
@@ -59,7 +61,7 @@ export function ResourceTable({
         : rows,
     [rows, deferredQuery, columns, labelKeys],
   );
-  const hasActions = actions.length > 0 || Boolean(linkBase);
+  const hasActions = actions.length > 0 || Boolean(linkBase) || Boolean(renderRowActions);
 
   return (
     <div className="space-y-3">
@@ -116,14 +118,17 @@ export function ResourceTable({
                     ))}
                     {hasActions ? (
                       <TableCell className="w-12 text-right">
-                        <ResourceActions
-                          row={row}
-                          actions={actions}
-                          idKey={actionIdKey}
-                          labelKeys={labelKeys}
-                          onCompleted={onActionCompleted}
-                          detailsHref={recordHref(row, linkBase, linkIdKey)}
-                        />
+                        <div className="flex items-center justify-end gap-1">
+                          {renderRowActions?.(row)}
+                          <ResourceActions
+                            row={row}
+                            actions={actions}
+                            idKey={actionIdKey}
+                            labelKeys={labelKeys}
+                            onCompleted={onActionCompleted}
+                            detailsHref={recordHref(row, linkBase, linkIdKey)}
+                          />
+                        </div>
                       </TableCell>
                     ) : null}
                   </TableRow>
@@ -160,14 +165,17 @@ export function ResourceTable({
                       </p>
                     </div>
                     {hasActions ? (
-                      <ResourceActions
-                        row={row}
-                        actions={actions}
-                        idKey={actionIdKey}
-                        labelKeys={labelKeys}
-                        onCompleted={onActionCompleted}
-                        detailsHref={recordHref(row, linkBase, linkIdKey)}
-                      />
+                      <div className="flex shrink-0 flex-wrap justify-end gap-1">
+                        {renderRowActions?.(row)}
+                        <ResourceActions
+                          row={row}
+                          actions={actions}
+                          idKey={actionIdKey}
+                          labelKeys={labelKeys}
+                          onCompleted={onActionCompleted}
+                          detailsHref={recordHref(row, linkBase, linkIdKey)}
+                        />
+                      </div>
                     ) : null}
                   </div>
                   <dl className="mt-3 grid gap-2 text-sm">
@@ -204,6 +212,7 @@ export function ResourceTable({
                 labelKeys={labelKeys}
                 onActionCompleted={onActionCompleted}
                 linkedColumns={linkedColumns}
+                renderRowActions={renderRowActions}
               />
             ))
           )}
@@ -226,6 +235,7 @@ function ResourceGridCard({
   labelKeys,
   onActionCompleted,
   linkedColumns,
+  renderRowActions,
 }: {
   row: Record<string, unknown>;
   columns: string[];
@@ -236,6 +246,7 @@ function ResourceGridCard({
   labelKeys: string[];
   onActionCompleted?: () => void | Promise<void>;
   linkedColumns?: Record<string, LinkedResourceColumn>;
+  renderRowActions?: (row: Record<string, unknown>) => ReactNode;
 }) {
   const label = recordLabel(row, labelKeys);
   const detailsHref = recordHref(row, linkBase, linkIdKey);
@@ -256,15 +267,18 @@ function ResourceGridCard({
             {compactId(row[actionIdKey] ?? row.id ?? row.riderId)}
           </p>
         </div>
-        {actions.length > 0 || detailsHref ? (
-          <ResourceActions
-            row={row}
-            actions={actions}
-            idKey={actionIdKey}
-            labelKeys={labelKeys}
-            onCompleted={onActionCompleted}
-            detailsHref={detailsHref}
-          />
+        {actions.length > 0 || detailsHref || renderRowActions ? (
+          <div className="flex shrink-0 flex-wrap justify-end gap-1">
+            {renderRowActions?.(row)}
+            <ResourceActions
+              row={row}
+              actions={actions}
+              idKey={actionIdKey}
+              labelKeys={labelKeys}
+              onCompleted={onActionCompleted}
+              detailsHref={detailsHref}
+            />
+          </div>
         ) : null}
       </div>
       <dl className="mt-4 space-y-2 border-t pt-3 text-sm">
