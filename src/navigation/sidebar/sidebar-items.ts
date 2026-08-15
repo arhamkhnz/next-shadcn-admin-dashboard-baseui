@@ -6,6 +6,7 @@ import {
   ClipboardCheck,
   FileClock,
   Headphones,
+  KeyRound,
   LayoutDashboard,
   type LucideIcon,
   MapPinHouse,
@@ -91,6 +92,7 @@ export const sidebarItems: NavGroup[] = [
     items: [
       { id: "approvals", title: "Approvals", url: "/dashboard/approvals", icon: MessageSquareWarning },
       { id: "audit", title: "Audit log", url: "/dashboard/audit", icon: FileClock },
+      { id: "api-keys", title: "API keys", url: "/dashboard/api-keys", icon: KeyRound },
       { id: "configurations", title: "Configurations", url: "/dashboard/configurations", icon: SlidersHorizontal },
       { id: "settings", title: "Settings", url: "/dashboard/settings", icon: Settings },
     ],
