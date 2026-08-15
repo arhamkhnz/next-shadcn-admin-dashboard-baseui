@@ -13,6 +13,7 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { CUSTOMERS_API_ENDPOINT } from "@/lib/api/customer-query";
 import { formatResourceValue } from "@/lib/display";
 
+import { ExportRecordsButton } from "./export-records-button";
 import { PageHeader } from "./page-header";
 import { StatusBadge } from "./status-badge";
 
@@ -74,6 +75,7 @@ export function ApiKeysScreen() {
       }).length,
     };
   }, [keys]);
+  const exportColumns = ["name", "keyPrefix", "status", "userId", "expiresAt", "lastUsedAt", "createdBy", "createdAt"];
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -179,10 +181,15 @@ export function ApiKeysScreen() {
       </div>
       <Card>
         <CardHeader className="border-b">
-          <CardTitle>API activity tracking</CardTitle>
-          <CardDescription>
-            Review every key separately with prefix, owner, expiry, creator, and last use.
-          </CardDescription>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <CardTitle>API activity tracking</CardTitle>
+              <CardDescription>
+                Review every key separately with prefix, owner, expiry, creator, and last use.
+              </CardDescription>
+            </div>
+            <ExportRecordsButton rows={keys} columns={exportColumns} filename="api-keys" />
+          </div>
         </CardHeader>
         <CardContent className="pt-5">
           <div className="grid gap-3">

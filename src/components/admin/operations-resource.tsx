@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { rowsFromPayload } from "@/lib/display";
 
 import { ResourceTable } from "./resource-table";
+import type { ResourceAction } from "./resource-types";
 
 const fetcher = async (url: string) => {
   const response = await fetch(url, { cache: "no-store" });
@@ -26,6 +27,10 @@ export function OperationsResource({
   emptyMessage,
   linkBase,
   linkIdKey,
+  actions,
+  actionIdKey,
+  labelKeys,
+  exportFilename,
 }: {
   endpoint: string;
   columns: string[];
@@ -34,6 +39,10 @@ export function OperationsResource({
   emptyMessage?: string;
   linkBase?: string;
   linkIdKey?: string;
+  actions?: ResourceAction[];
+  actionIdKey?: string;
+  labelKeys?: string[];
+  exportFilename?: string;
 }) {
   const { data, error, isLoading, mutate, isValidating } = useSWR(`/api/backend/${endpoint}`, fetcher, {
     refreshInterval,
@@ -76,6 +85,11 @@ export function OperationsResource({
           emptyMessage={emptyMessage}
           linkBase={linkBase}
           linkIdKey={linkIdKey}
+          actions={actions}
+          actionIdKey={actionIdKey}
+          labelKeys={labelKeys}
+          onActionCompleted={() => mutate()}
+          exportFilename={exportFilename ?? endpoint.split("?")[0].replace(/\//g, "-")}
         />
       </CardContent>
     </Card>

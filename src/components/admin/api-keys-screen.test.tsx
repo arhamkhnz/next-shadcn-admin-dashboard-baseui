@@ -76,6 +76,7 @@ describe("ApiKeysScreen", () => {
     expect(await screen.findByRole("heading", { name: "API keys" })).toBeInTheDocument();
     expect(await screen.findByRole("option", { name: /GVD Partner/ })).toBeInTheDocument();
     expect(await screen.findByText("Existing partner key")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Export CSV" })).toBeInTheDocument();
     expect(screen.getAllByText("Last used").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Never used").length).toBeGreaterThan(0);
 
