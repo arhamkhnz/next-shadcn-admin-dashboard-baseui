@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { rowsFromPayload } from "@/lib/display";
 
 import { ResourceTable } from "./resource-table";
-import type { ResourceAction } from "./resource-types";
+import type { LinkedResourceColumn, ResourceAction } from "./resource-types";
 
 const fetcher = async (url: string) => {
   const response = await fetch(url, { cache: "no-store" });
@@ -31,6 +31,7 @@ export function OperationsResource({
   actionIdKey,
   labelKeys,
   exportFilename,
+  linkedColumns,
 }: {
   endpoint: string;
   columns: string[];
@@ -43,6 +44,7 @@ export function OperationsResource({
   actionIdKey?: string;
   labelKeys?: string[];
   exportFilename?: string;
+  linkedColumns?: Record<string, LinkedResourceColumn>;
 }) {
   const { data, error, isLoading, mutate, isValidating } = useSWR(`/api/backend/${endpoint}`, fetcher, {
     refreshInterval,
@@ -90,6 +92,7 @@ export function OperationsResource({
           labelKeys={labelKeys}
           onActionCompleted={() => mutate()}
           exportFilename={exportFilename ?? endpoint.split("?")[0].replace(/\//g, "-")}
+          linkedColumns={linkedColumns}
         />
       </CardContent>
     </Card>

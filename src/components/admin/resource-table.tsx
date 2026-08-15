@@ -14,7 +14,7 @@ import { ExportRecordsButton } from "./export-records-button";
 import { LayoutToggle } from "./layout-toggle";
 import { usePersistentLayout } from "./persistent-layout";
 import { ResourceActions } from "./resource-actions";
-import type { ResourceAction } from "./resource-types";
+import type { LinkedResourceColumn, ResourceAction } from "./resource-types";
 import { StatusBadge } from "./status-badge";
 
 const STATUS_KEYS = /^(status|state|freshness|verificationStatus)$/i;
@@ -30,6 +30,7 @@ export function ResourceTable({
   labelKeys = [],
   onActionCompleted,
   exportFilename = "liftngo-records",
+  linkedColumns,
 }: {
   rows: Record<string, unknown>[];
   columns: string[];
@@ -41,6 +42,7 @@ export function ResourceTable({
   labelKeys?: string[];
   onActionCompleted?: () => void | Promise<void>;
   exportFilename?: string;
+  linkedColumns?: Record<string, LinkedResourceColumn>;
 }) {
   const [layout, setLayout] = usePersistentLayout();
   const [query, setQuery] = useState("");
@@ -109,7 +111,7 @@ export function ResourceTable({
                   <TableRow key={String(row.id ?? row.riderId ?? row.tripCode ?? index)}>
                     {columns.map((column, columnIndex) => (
                       <TableCell key={column} className={desktopColumnClass(columnIndex)}>
-                        {desktopCell(row, column, columns[0], linkBase, linkIdKey)}
+                        {desktopCell(row, column, columns[0], linkBase, linkIdKey, linkedColumns)}
                       </TableCell>
                     ))}
                     {hasActions ? (
@@ -173,11 +175,7 @@ export function ResourceTable({
                       <div className="grid grid-cols-[minmax(6rem,0.45fr)_1fr] gap-3" key={column}>
                         <dt className="text-muted-foreground">{titleFromKey(column.replace(/Paise$/i, ""))}</dt>
                         <dd className="min-w-0 truncate text-right">
-                          {STATUS_KEYS.test(column) ? (
-                            <StatusBadge value={row[column]} />
-                          ) : (
-                            formatResourceValue(column, row[column])
-                          )}
+                          <ResourceColumnValue row={row} column={column} linkedColumns={linkedColumns} />
                         </dd>
                       </div>
                     ))}
@@ -205,6 +203,7 @@ export function ResourceTable({
                 actionIdKey={actionIdKey}
                 labelKeys={labelKeys}
                 onActionCompleted={onActionCompleted}
+                linkedColumns={linkedColumns}
               />
             ))
           )}
@@ -226,6 +225,7 @@ function ResourceGridCard({
   actionIdKey,
   labelKeys,
   onActionCompleted,
+  linkedColumns,
 }: {
   row: Record<string, unknown>;
   columns: string[];
@@ -235,6 +235,7 @@ function ResourceGridCard({
   actionIdKey: string;
   labelKeys: string[];
   onActionCompleted?: () => void | Promise<void>;
+  linkedColumns?: Record<string, LinkedResourceColumn>;
 }) {
   const label = recordLabel(row, labelKeys);
   const detailsHref = recordHref(row, linkBase, linkIdKey);
@@ -271,11 +272,7 @@ function ResourceGridCard({
           <div className="flex items-start justify-between gap-4" key={column}>
             <dt className="shrink-0 text-muted-foreground">{titleFromKey(column.replace(/Paise$/i, ""))}</dt>
             <dd className="min-w-0 truncate text-right" title={formatResourceValue(column, row[column])}>
-              {STATUS_KEYS.test(column) ? (
-                <StatusBadge value={row[column]} />
-              ) : (
-                formatResourceValue(column, row[column])
-              )}
+              <ResourceColumnValue row={row} column={column} linkedColumns={linkedColumns} />
             </dd>
           </div>
         ))}
@@ -290,14 +287,32 @@ function desktopColumnClass(index: number): string {
   return "truncate";
 }
 
+function ResourceColumnValue({
+  row,
+  column,
+  linkedColumns,
+}: {
+  row: Record<string, unknown>;
+  column: string;
+  linkedColumns?: Record<string, LinkedResourceColumn>;
+}) {
+  const linkedColumn = linkedColumns?.[column];
+  if (STATUS_KEYS.test(column)) return <StatusBadge value={row[column]} />;
+  if (linkedColumn) return <LinkedColumnValue row={row} column={column} link={linkedColumn} />;
+  return formatResourceValue(column, row[column]);
+}
+
 function desktopCell(
   row: Record<string, unknown>,
   column: string,
   firstColumn: string,
   linkBase?: string,
   linkIdKey = "id",
+  linkedColumns?: Record<string, LinkedResourceColumn>,
 ) {
   const value = row[column];
+  const linkedColumn = linkedColumns?.[column];
+  if (linkedColumn) return <LinkedColumnValue row={row} column={column} link={linkedColumn} />;
   if (linkBase && column === firstColumn && (row[linkIdKey] || row.riderId)) {
     return (
       <Link
@@ -320,6 +335,35 @@ function desktopCell(
     <span className="block truncate" title={formatResourceValue(column, value)}>
       {formatResourceValue(column, value)}
     </span>
+  );
+}
+
+function LinkedColumnValue({
+  row,
+  column,
+  link,
+}: {
+  row: Record<string, unknown>;
+  column: string;
+  link: LinkedResourceColumn;
+}) {
+  const value = row[column];
+  const id = row[link.idKey ?? column];
+  if (!id) {
+    return (
+      <span className="block truncate" title={formatResourceValue(column, value)}>
+        {formatResourceValue(column, value)}
+      </span>
+    );
+  }
+  return (
+    <Link
+      className="block truncate font-mono text-primary text-xs underline-offset-4 hover:underline"
+      href={`${link.hrefBase}/${encodeURIComponent(String(id))}`}
+      title={String(value ?? id)}
+    >
+      {compactId(value ?? id)}
+    </Link>
   );
 }
 

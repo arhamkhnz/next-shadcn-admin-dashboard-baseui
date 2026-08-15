@@ -1,6 +1,13 @@
-import { ActionConsole } from "@/components/admin/action-console";
 import { OperationsResource } from "@/components/admin/operations-resource";
 import { PageHeader } from "@/components/admin/page-header";
+import { SUPPORT_CASE_ACTIONS } from "@/components/admin/resource-action-configs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const linkedColumns = {
+  riderId: { hrefBase: "/dashboard/drivers" },
+  orderId: { hrefBase: "/dashboard/orders" },
+};
+
 export default function Page() {
   return (
     <main className="space-y-6">
@@ -8,33 +15,51 @@ export default function Page() {
         title="Support"
         description="Prioritised customer, driver, and partner cases with response-SLA visibility."
       />
+      <section className="grid gap-3 md:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">One-click ownership</CardTitle>
+          </CardHeader>
+          <CardContent className="text-muted-foreground text-sm">
+            Acknowledge case moves an OPEN case into IN_PROGRESS so the queue reflects who started triage.
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Open the driver</CardTitle>
+          </CardHeader>
+          <CardContent className="text-muted-foreground text-sm">
+            Rider IDs are direct links to the driver profile, removing copy/paste before replying or deciding.
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">SLA and case detail</CardTitle>
+          </CardHeader>
+          <CardContent className="text-muted-foreground text-sm">
+            The queue now shows subject, assignment, related order, SLA due time, and latest update together.
+          </CardContent>
+        </Card>
+      </section>
       <OperationsResource
         endpoint="operations/support/cases"
-        columns={["id", "riderId", "orderId", "category", "priority", "status", "slaDueAt", "updatedAt"]}
+        columns={[
+          "category",
+          "subject",
+          "priority",
+          "status",
+          "riderId",
+          "orderId",
+          "assignedTo",
+          "slaDueAt",
+          "updatedAt",
+          "createdAt",
+        ]}
+        actions={SUPPORT_CASE_ACTIONS}
+        labelKeys={["category", "subject"]}
         refreshInterval={15_000}
+        linkedColumns={linkedColumns}
       />
-      <div className="grid gap-4 xl:grid-cols-2">
-        <ActionConsole
-          title="Reply to case"
-          description="Send an audited operations reply to the driver."
-          endpoint="operations/support/cases/{id}/messages"
-          fields={[{ name: "body", label: "Reply", required: true }]}
-          submitLabel="Send reply"
-        />
-        <ActionConsole
-          title="Update case status"
-          description="Move a support case through its resolution workflow."
-          endpoint="operations/support/cases/{id}/status"
-          method="PUT"
-          fields={[
-            {
-              name: "status",
-              label: "Status",
-              options: ["OPEN", "IN_PROGRESS", "WAITING_ON_RIDER", "RESOLVED", "CLOSED"],
-            },
-          ]}
-        />
-      </div>
     </main>
   );
 }

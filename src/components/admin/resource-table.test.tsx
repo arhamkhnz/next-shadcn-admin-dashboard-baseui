@@ -74,4 +74,20 @@ describe("ResourceTable", () => {
 
     expect(screen.getByRole("button", { name: "Export CSV" })).toBeInTheDocument();
   });
+
+  it("links configured ID columns to operational detail pages", () => {
+    render(
+      <ResourceTable
+        rows={[{ ...row, riderId: "driver-1", orderId: "order/1" }]}
+        columns={["state", "riderId", "orderId"]}
+        linkedColumns={{
+          riderId: { hrefBase: "/dashboard/drivers" },
+          orderId: { hrefBase: "/dashboard/orders" },
+        }}
+      />,
+    );
+
+    expect(screen.getAllByRole("link", { name: "driver-1" })[0]).toHaveAttribute("href", "/dashboard/drivers/driver-1");
+    expect(screen.getAllByRole("link", { name: "order/1" })[0]).toHaveAttribute("href", "/dashboard/orders/order%2F1");
+  });
 });
