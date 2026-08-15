@@ -8,7 +8,6 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { cn } from "@/lib/utils";
 import { getPreference } from "@/server/server-actions";
 
-import { SearchDialog } from "./_components/header/search-dialog";
 import { ThemeSwitcher } from "./_components/header/theme-switcher";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
@@ -53,7 +52,9 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
                 orientation="vertical"
                 className="mx-2 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
               />
-              <SearchDialog />
+              <span className="hidden font-medium text-muted-foreground text-sm sm:inline">
+                Operations control centre
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <ThemeSwitcher />

@@ -1,137 +1,35 @@
-# Next.js Admin Template with TypeScript & Shadcn UI
+# LiftNGo Admin
 
-**Studio Admin** - Includes multiple dashboards, authentication layouts, customizable theme presets, and more.
+Secure single-administrator operations console for LiftNGo. It connects to the NestJS API in `../liftngo-backend` and covers live fleet locations, customer trips, delivery orders, customers, drivers, partners, verification documents, finance, support, safety, approvals, audit, and platform configuration.
 
-<img src="https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui/blob/main/media/dashboard.png?version=5" alt="Dashboard Screenshot">
+## Local setup
 
-Most admin templates I found, free or paid, felt cluttered, outdated, or too rigid. I built this as a cleaner alternative with features often missing in others, such as theme toggling and layout controls, while keeping the design modern, minimal, and flexible.
+1. Copy `.env.example` to `.env.local`.
+2. Keep `BACKEND_API_URL=http://localhost:8081/api/v1` for the local backend.
+3. Set `NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY` to a browser-restricted Google Maps JavaScript API key. Restrict it to the admin host and only the Maps JavaScript API.
+4. Start the backend, then run `npm install` and `npm run dev` here.
 
-> **View demo:** [studio admin](https://next-shadcn-admin-dashboard.vercel.app)
+The admin app is available at `http://localhost:3000`. All backend traffic goes through the authenticated same-origin `/api/backend` boundary; access and rotating refresh tokens remain in HTTP-only cookies and are never exposed to client JavaScript.
 
-> [!NOTE]
-> Looking for the Radix UI version? Check out [next-shadcn-admin-dashboard](https://github.com/arhamkhnz/next-shadcn-admin-dashboard).
->
-> Looking for the React Aria version? Check out [arhamkhnz/next-shadcn-admin-dashboard-aria](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-aria).
->
-> Looking for the TanStack Start version? Check out [tanstack-shadcn-admin-dashboard](https://github.com/arhamkhnz/tanstack-shadcn-admin-dashboard).
+## Configure the one administrator
 
-> [!TIP]
-> I’m also working on Nuxt.js and Svelte versions of this dashboard. They’ll be live soon.
+In `liftngo-backend`, run the migrations and bootstrap credentials for the existing active ADMIN user:
 
-## Features
-
-- Built with Next.js 16, TypeScript, Tailwind CSS v4, and Shadcn UI  
-- Responsive and mobile-friendly  
-- Customizable theme presets (light/dark modes with color schemes like Tangerine, Brutalist, and more)  
-- Flexible layouts (collapsible sidebar, variable content widths)  
-- Authentication flows and screens  
-- Prebuilt dashboards (Default, CRM, Finance, Analytics, Productivity) plus legacy variants  
-- Role-Based Access Control (RBAC) with config-driven UI and multi-tenant support *(planned)*  
-
-> [!NOTE]
-> The default dashboard uses the **shadcn neutral** theme.  
-> It also includes additional color presets inspired by [Tweakcn](https://tweakcn.com):  
->
-> - Tangerine  
-> - Neo Brutalism  
-> - Soft Pop  
->
-> You can create more presets by following the same structure as the existing ones.
-
-## Tech Stack
-
-- **Framework**: Next.js 16 (App Router), TypeScript, Tailwind CSS v4  
-- **UI Components**: Shadcn UI  
-- **Validation**: Zod  
-- **Forms & State Management**: React Hook Form, Zustand  
-- **Tables & Data Handling**: TanStack Table  
-- **Tooling & DX**: Biome, Husky  
-
-## Screens
-
-### Available
-- Default Dashboard  
-- CRM Dashboard  
-- Finance Dashboard  
-- Analytics Dashboard  
-- Productivity Dashboard  
-- E-commerce Dashboard  
-- Academy Dashboard  
-- Logistics Dashboard  
-- Infrastructure Dashboard  
-- File Manager  
-- Patient Monitoring  
-- Profile  
-- Email Page  
-- Chat Page  
-- Calendar Page  
-- Kanban Board
-- Invoice Page
-- Users Management
-- Roles Management
-- Authentication (4 screens)
-- Legacy: Default v1, CRM v1, Finance v1, Analytics v1
-
-### Planned
-- I've added all the planned screens. Feel free to open an issue for requesting something specific.
-
-## Colocation File System Architecture
-
-This project follows a **colocation-based architecture** each feature keeps its own pages, components, and logic inside its route folder.  
-Shared UI, hooks, and configuration live at the top level, making the codebase modular, scalable, and easier to maintain as the app grows.
-
-For a full breakdown of the structure with examples, see the [Next Colocation Template](https://github.com/arhamkhnz/next-colocation-template).
-
-## Getting Started
-
-You can run this project locally, or deploy it instantly with Vercel.
-
-### Deploy with Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Farhamkhnz%2Fnext-shadcn-admin-dashboard-baseui)
-
-_Deploy your own copy with one click._
-
-### Run locally
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui.git
-   ```
-   
-2. **Navigate into the project**
-   ```bash
-    cd next-shadcn-admin-dashboard-baseui
-   ```
-   
-3. **Install dependencies**
-   ```bash
-    npm install
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-Your app will be running at [http://localhost:3000](http://localhost:3000)
-
-### Formatting and Linting
-
-Format, lint, and organize imports
-```bash
-npx @biomejs/biome check --write
+```powershell
+$env:LIFTNGO_ADMIN_USER_ID = "existing-admin-user-uuid"
+$env:LIFTNGO_ADMIN_USERNAME = "admin"
+$env:LIFTNGO_ADMIN_PASSWORD = "use-a-unique-strong-password"
+corepack yarn db:migration:run
+corepack yarn admin:bootstrap
 ```
-> For more information on available rules, fixes, and CLI options, refer to the [Biome documentation](https://biomejs.dev/).
 
----
+The password must be at least 14 characters and meet the backend complexity rules. Running the bootstrap command again rotates the password, increments the credential version, and revokes active refresh sessions.
 
-> [!IMPORTANT]  
-> This project is updated frequently. If you’re working from a fork or an older clone, pull the latest changes before syncing. Some updates may include breaking changes.
+## Verification
 
----
+```powershell
+npm test -- --run
+npm run build
+```
 
-Contributions are welcome. Feel free to open issues, feature requests, or start a discussion.
-
-
-**Happy Vibe Coding!**
+The UI supports Light, Dark, and System modes only. Operational mutations are audited by the backend where supported, sensitive document links expire after 15 minutes, and high-risk changes use the approval queue.
