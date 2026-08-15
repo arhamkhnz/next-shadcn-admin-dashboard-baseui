@@ -14,9 +14,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": [
-      "biome check --write --no-errors-on-unmatched"
-    ]
+    "*.{js,ts,jsx,tsx}": ["biome check --write --no-errors-on-unmatched"]
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -24,7 +22,6 @@
     "@dnd-kit/helpers": "^0.5.0",
     "@dnd-kit/react": "^0.5.0",
     "@fullcalendar/react": "^7.0.2",
-    "@googlemaps/js-api-loader": "^2.1.1",
     "@hookform/resolvers": "^5.8.0",
     "@shadcn/react": "^0.3.0",
     "@tanstack/react-table": "^9.1.2",
@@ -36,6 +33,7 @@
     "embla-carousel-react": "^8.6.0",
     "geist": "^1.7.2",
     "input-otp": "^1.4.2",
+    "leaflet": "^1.9.4",
     "lucide-react": "^1.31.0",
     "next": "^16.3.1",
     "react": "^19.2.8",
@@ -60,7 +58,7 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.4",
     "@types/d3-geo": "^3.1.1",
-    "@types/google.maps": "^3.65.5",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^22.20.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

@@ -15,6 +15,7 @@ export type ActionField = {
   label: string;
   placeholder?: string;
   options?: string[];
+  choices?: { label: string; value: string }[];
   required?: boolean;
   valueType?: "string" | "boolean" | "number";
 };
@@ -89,30 +90,51 @@ export function ActionConsole({
   );
 }
 function ActionInput({ field }: { field: ActionField }) {
+  let control: React.ReactNode;
+  if (field.choices) {
+    control = (
+      <NativeSelect
+        id={`${field.name}-${field.label}`}
+        name={field.name}
+        required={field.required ?? true}
+        className="w-full"
+      >
+        {field.choices.map((choice) => (
+          <NativeSelectOption key={choice.value} value={choice.value}>
+            {choice.label}
+          </NativeSelectOption>
+        ))}
+      </NativeSelect>
+    );
+  } else if (field.options) {
+    control = (
+      <NativeSelect
+        id={`${field.name}-${field.label}`}
+        name={field.name}
+        required={field.required ?? true}
+        className="w-full"
+      >
+        {field.options.map((option) => (
+          <NativeSelectOption key={option} value={option}>
+            {option.replaceAll("_", " ")}
+          </NativeSelectOption>
+        ))}
+      </NativeSelect>
+    );
+  } else {
+    control = (
+      <Input
+        id={`${field.name}-${field.label}`}
+        name={field.name}
+        placeholder={field.placeholder}
+        required={field.required ?? true}
+      />
+    );
+  }
   return (
     <div className="space-y-2">
       <Label htmlFor={`${field.name}-${field.label}`}>{field.label}</Label>
-      {field.options ? (
-        <NativeSelect
-          id={`${field.name}-${field.label}`}
-          name={field.name}
-          required={field.required ?? true}
-          className="w-full"
-        >
-          {field.options.map((option) => (
-            <NativeSelectOption key={option} value={option}>
-              {option.replaceAll("_", " ")}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
-      ) : (
-        <Input
-          id={`${field.name}-${field.label}`}
-          name={field.name}
-          placeholder={field.placeholder}
-          required={field.required ?? true}
-        />
-      )}
+      {control}
     </div>
   );
 }

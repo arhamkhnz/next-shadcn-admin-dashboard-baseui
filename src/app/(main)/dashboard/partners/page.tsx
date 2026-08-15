@@ -6,7 +6,8 @@ export default function Page() {
       description="Companies and partner accounts connected to LiftNGo delivery operations."
       endpoint="companies?limit=100"
       linkBase="/dashboard/partners"
-      columns={["id", "entityName", "gstin", "officialWebsite", "status", "userId", "createdAt"]}
+      columns={["entityName", "status", "gstin", "officialWebsite", "userId", "createdAt"]}
+      labelKeys={["entityName"]}
     />
   );
 }

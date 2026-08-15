@@ -8,15 +8,16 @@ export default function Page() {
       linkBase="/dashboard/verification"
       linkIdKey="userId"
       columns={[
-        "userId",
         "vehicleType",
         "vehicleNumber",
+        "userId",
         "licenseNumber",
         "isVerified",
         "rating",
         "totalTrips",
         "updatedAt",
       ]}
+      labelKeys={["vehicleNumber", "licenseNumber"]}
       emptyMessage="No drivers are waiting for verification."
     />
   );

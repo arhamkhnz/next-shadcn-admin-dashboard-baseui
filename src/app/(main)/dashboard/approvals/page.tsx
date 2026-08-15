@@ -1,6 +1,6 @@
-import { ActionConsole } from "@/components/admin/action-console";
 import { OperationsResource } from "@/components/admin/operations-resource";
 import { PageHeader } from "@/components/admin/page-header";
+import { APPROVAL_ACTIONS } from "@/components/admin/resource-action-configs";
 export default function Page() {
   return (
     <main className="space-y-6">
@@ -11,23 +11,17 @@ export default function Page() {
       <OperationsResource
         endpoint="operations/platform/approvals?limit=200"
         columns={[
-          "id",
           "action",
+          "status",
           "subjectType",
           "subjectId",
-          "status",
           "requestedBy",
           "requestedAt",
           "decidedBy",
           "decidedAt",
         ]}
-      />
-      <ActionConsole
-        title="Approve pending request"
-        description="Apply a pending high-risk change after independent review."
-        endpoint="operations/platform/approvals/{id}/approve"
-        fields={[{ name: "reasonCode", label: "Decision reason", placeholder: "APPROVED_AFTER_REVIEW" }]}
-        submitLabel="Approve request"
+        actions={APPROVAL_ACTIONS}
+        labelKeys={["action", "subjectType"]}
       />
     </main>
   );

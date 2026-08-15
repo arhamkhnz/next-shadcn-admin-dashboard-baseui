@@ -2,9 +2,10 @@
 
 import { type FormEvent, useState } from "react";
 
-import { Plus } from "lucide-react";
+import { AlertCircle, Plus, RefreshCw } from "lucide-react";
 import useSWR, { useSWRConfig } from "swr";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,21 +18,48 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CUSTOMERS_API_ENDPOINT } from "@/lib/api/customer-query";
+import { rowsFromPayload } from "@/lib/display";
 
-import { OperationsResource } from "./operations-resource";
+import type { FleetRider } from "./fleet-map";
 import { PageHeader } from "./page-header";
+import type { TripDriverLocation } from "./trip-types";
+import { TripWorkspace } from "./trip-workspace";
 
 const tripEndpoint = "/api/backend/trips?limit=100";
 type Customer = { id: string; firstName?: string; lastName?: string; mobile: string };
+
+const fetcher = (url: string) =>
+  fetch(url, { cache: "no-store" }).then(async (response) => {
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(body.message ?? "Unable to load trips.");
+    return body;
+  });
 
 export function TripsScreen() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { mutate } = useSWRConfig();
-  const { data: customers } = useSWR<{ data: Customer[] }>(
-    open ? "/api/backend/users?limit=100&filter.role=$eq:CUSTOMER" : null,
-    (url: string) => fetch(url).then((response) => response.json()),
+  const {
+    data: trips,
+    error: tripsError,
+    isLoading: tripsLoading,
+    isValidating: tripsValidating,
+    mutate: refreshTrips,
+  } = useSWR(tripEndpoint, fetcher, {
+    refreshInterval: 15_000,
+    revalidateOnFocus: true,
+    keepPreviousData: true,
+  });
+  const { data: fleet } = useSWR<{ riders?: FleetRider[] }>(
+    "/api/backend/operations/platform/fleet?limit=500",
+    fetcher,
+    { refreshInterval: 10_000, revalidateOnFocus: true, keepPreviousData: true },
+  );
+  const { data: customers } = useSWR<{ data: Customer[] }>(open ? CUSTOMERS_API_ENDPOINT : null, (url: string) =>
+    fetch(url).then((response) => response.json()),
   );
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -131,6 +159,22 @@ export function TripsScreen() {
     </Dialog>
   );
 
+  const driverLocations = (fleet?.riders ?? []).reduce<Record<string, TripDriverLocation>>((locations, rider) => {
+    if (!rider.location) return locations;
+    locations[rider.riderId] = {
+      name: rider.name,
+      latitude: rider.location.latitude,
+      longitude: rider.location.longitude,
+      online: ["ACTIVE_ONLINE", "RESERVED", "ON_DELIVERY", "RETURNING"].includes(rider.state),
+      capturedAt: rider.location.capturedAt,
+      accuracyM: rider.location.accuracyM,
+    };
+    if (rider.activeWork?.kind === "PASSENGER_RIDE" && rider.activeWork.id) {
+      locations[rider.activeWork.id] = locations[rider.riderId];
+    }
+    return locations;
+  }, {});
+
   return (
     <main className="space-y-6">
       <PageHeader
@@ -138,22 +182,32 @@ export function TripsScreen() {
         description="View every trip, create one for a customer, and monitor assignment through delivery."
         action={action}
       />
-      <OperationsResource
-        endpoint="trips?limit=100"
-        columns={[
-          "tripCode",
-          "status",
-          "customerId",
-          "driverId",
-          "vehicleType",
-          "originAddress",
-          "destinationAddress",
-          "estimatedFare",
-          "createdAt",
-        ]}
-        refreshInterval={15_000}
-        linkBase="/dashboard/trips"
-      />
+      {tripsLoading ? (
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
+          <Skeleton className="h-96" />
+          <Skeleton className="h-[620px]" />
+        </div>
+      ) : null}
+      {!tripsLoading && tripsError ? (
+        <Alert variant="destructive">
+          <AlertCircle />
+          <AlertTitle>Trips unavailable</AlertTitle>
+          <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
+            <span>{tripsError.message}</span>
+            <Button size="sm" variant="outline" onClick={() => refreshTrips()}>
+              <RefreshCw /> Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      ) : null}
+      {!tripsLoading && !tripsError ? (
+        <TripWorkspace
+          rows={rowsFromPayload(trips)}
+          onRefresh={refreshTrips}
+          isRefreshing={tripsValidating}
+          driverLocations={driverLocations}
+        />
+      ) : null}
     </main>
   );
 }
