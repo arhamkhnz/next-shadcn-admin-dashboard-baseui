@@ -33,7 +33,7 @@
     "embla-carousel-react": "^8.6.0",
     "geist": "^1.7.2",
     "input-otp": "^1.5.0",
-    "lucide-react": "^1.43.0",
+    "lucide-react": "^1.44.0",
     "next": "^16.3.4",
     "react": "^19.3.0",
     "react-day-picker": "^10.0.1",
@@ -45,11 +45,11 @@
     "simple-icons": "^16.30.0",
     "temporal-polyfill": "^1.0.4",
     "topojson-client": "^3.1.0",
-    "zod": "^4.5.4",
+    "zod": "^4.6.1",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.12",
+    "@biomejs/biome": "^2.5.13",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/d3-geo": "^3.1.1",
     "@types/node": "^22.20.2",
