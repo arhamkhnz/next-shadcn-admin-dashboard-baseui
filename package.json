@@ -24,7 +24,7 @@
     "@fullcalendar/react": "^7.1.1",
     "@hookform/resolvers": "^5.9.1",
     "@shadcn/react": "^0.3.1",
-    "@tanstack/react-table": "^9.2.8",
+    "@tanstack/react-table": "^9.3.1",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "cn": "^0.4.0",
@@ -45,7 +45,7 @@
     "simple-icons": "^16.35.0",
     "temporal-polyfill": "^1.0.5",
     "topojson-client": "^3.1.0",
-    "zod": "^4.6.6",
+    "zod": "^4.6.7",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
