@@ -146,7 +146,7 @@ export function BalanceDistributionCard() {
                         Total
                       </tspan>
                       <tspan
-                        className="fill-foreground font-heading font-medium text-lg tabular-nums"
+                        className="fill-foreground font-heading text-lg font-medium tabular-nums"
                         x={viewBox.cx}
                         y={(viewBox.cy ?? 0) + 14}
                       >
@@ -166,7 +166,7 @@ export function BalanceDistributionCard() {
               <div className="min-w-0">
                 <div className="flex min-w-0 items-center gap-1">
                   <span aria-hidden="true" className="h-2 w-1 rounded-full" style={{ backgroundColor: item.fill }} />
-                  <p className="truncate text-muted-foreground text-xs">{item.account}</p>
+                  <p className="text-muted-foreground truncate text-xs">{item.account}</p>
                 </div>
                 <p className="font-medium tabular-nums">
                   {formatCurrency(item.amount, { currency, noDecimals: true })}

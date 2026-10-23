@@ -100,7 +100,7 @@ function DragHandle() {
   const { handleRef } = sortableRow;
 
   return (
-    <Button ref={handleRef} variant="ghost" size="icon" className="size-7 text-muted-foreground hover:bg-transparent">
+    <Button ref={handleRef} variant="ghost" size="icon" className="text-muted-foreground size-7 hover:bg-transparent">
       <GripVerticalIcon />
       <span className="sr-only">Drag to reorder</span>
     </Button>
@@ -112,7 +112,7 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
 
   return (
     <Drawer swipeDirection={isMobile ? "down" : "right"}>
-      <DrawerTrigger render={<Button variant="link" className="w-fit px-0 text-left text-foreground" />}>
+      <DrawerTrigger render={<Button variant="link" className="text-foreground w-fit px-0 text-left" />}>
         {item.header}
       </DrawerTrigger>
       <DrawerContent>
@@ -162,7 +162,7 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
               </ChartContainer>
               <Separator />
               <div className="grid gap-2">
-                <div className="flex gap-2 font-medium leading-none">
+                <div className="flex gap-2 leading-none font-medium">
                   Trending up by 5.2% this month <TrendingUpIcon />
                 </div>
                 <div className="text-muted-foreground">
@@ -314,7 +314,7 @@ export const proposalSectionsColumns: ColumnDef<DataTableFeatures, ProposalSecti
     header: "Section Type",
     cell: ({ row }) => (
       <div className="w-32">
-        <Badge variant="outline" className="px-1.5 text-muted-foreground">
+        <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.type}
         </Badge>
       </div>
@@ -324,9 +324,9 @@ export const proposalSectionsColumns: ColumnDef<DataTableFeatures, ProposalSecti
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <Badge variant="outline" className="px-1.5 text-muted-foreground">
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
         {row.original.status === "Done" ? (
-          <CircleCheckIcon className="fill-green-500 stroke-primary-foreground dark:fill-green-600" />
+          <CircleCheckIcon className="stroke-primary-foreground fill-green-500 dark:fill-green-600" />
         ) : (
           <LoaderIcon />
         )}
@@ -345,7 +345,7 @@ export const proposalSectionsColumns: ColumnDef<DataTableFeatures, ProposalSecti
         <Input
           id={`${row.original.id}-target`}
           defaultValue={row.original.target}
-          className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
+          className="hover:bg-input/30 focus-visible:bg-background dark:focus-visible:bg-input/30 dark:hover:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
         />
       </form>
     ),
@@ -361,7 +361,7 @@ export const proposalSectionsColumns: ColumnDef<DataTableFeatures, ProposalSecti
         <Input
           id={`${row.original.id}-limit`}
           defaultValue={row.original.limit}
-          className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
+          className="hover:bg-input/30 focus-visible:bg-background dark:focus-visible:bg-input/30 dark:hover:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
         />
       </form>
     ),
@@ -411,7 +411,7 @@ export const proposalSectionsColumns: ColumnDef<DataTableFeatures, ProposalSecti
           render={
             <Button
               variant="ghost"
-              className="flex size-8 text-muted-foreground data-popup-open:bg-muted"
+              className="text-muted-foreground data-popup-open:bg-muted flex size-8"
               size="icon"
             />
           }

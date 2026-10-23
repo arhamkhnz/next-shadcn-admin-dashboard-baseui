@@ -55,7 +55,7 @@ export function TaskStatusFilter<TData extends RowData>({ table }: TaskStatusFil
         render={
           <Button
             variant="outline"
-            className={cn("border-dashed", selectedValues.size > 0 && "border-solid bg-muted text-foreground")}
+            className={cn("border-dashed", selectedValues.size > 0 && "bg-muted text-foreground border-solid")}
           />
         }
       >

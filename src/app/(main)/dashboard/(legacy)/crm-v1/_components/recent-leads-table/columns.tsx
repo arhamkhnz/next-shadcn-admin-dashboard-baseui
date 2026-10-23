@@ -88,7 +88,7 @@ export const recentLeadsColumns: ColumnDef<DataTableFeatures, RecentLeadRow>[] =
     cell: () => (
       <DropdownMenu>
         <DropdownMenuTrigger
-          render={<Button variant="ghost" size="icon" className="flex size-8 text-muted-foreground" />}
+          render={<Button variant="ghost" size="icon" className="text-muted-foreground flex size-8" />}
         >
           <EllipsisVertical />
           <span className="sr-only">Open menu</span>

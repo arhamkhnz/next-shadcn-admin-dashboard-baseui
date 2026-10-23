@@ -66,7 +66,7 @@ export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Rol
                 <TableHead
                   key={header.id}
                   style={{ width: header.getSize() }}
-                  className="h-10 px-4 text-center font-medium text-foreground text-sm first:text-left"
+                  className="text-foreground h-10 px-4 text-center text-sm font-medium first:text-left"
                 >
                   {header.isPlaceholder ? null : <table.FlexRender header={header} />}
                 </TableHead>
@@ -86,7 +86,7 @@ export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Rol
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={colCount} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={colCount} className="text-muted-foreground h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>
@@ -94,7 +94,7 @@ export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Rol
         </TableBody>
       </Table>
 
-      <div className="flex items-center border-border/70 border-t p-4">
+      <div className="border-border/70 flex items-center border-t p-4">
         <div className="text-muted-foreground text-sm">
           Showing {start} to {end} of {filteredRows.length} roles
         </div>
@@ -178,16 +178,16 @@ function TableBodyGroup({
 }) {
   return (
     <>
-      <TableRow className="h-10 bg-muted">
-        <TableCell className="px-4 text-foreground/60 text-sm" colSpan={colCount}>
+      <TableRow className="bg-muted h-10">
+        <TableCell className="text-foreground/60 px-4 text-sm" colSpan={colCount}>
           {group.label}{" "}
-          <Badge variant="outline" className="ml-2 rounded-sm bg-transparent text-muted-foreground text-xs">
+          <Badge variant="outline" className="text-muted-foreground ml-2 rounded-sm bg-transparent text-xs">
             {group.rows.length} of {totalCount}
           </Badge>
         </TableCell>
       </TableRow>
       {group.rows.map((row) => (
-        <TableRow key={row.id} className="h-12 hover:bg-muted/20">
+        <TableRow key={row.id} className="hover:bg-muted/20 h-12">
           {row.getVisibleCells().map((cell, index) => (
             <TableCell
               key={cell.id}

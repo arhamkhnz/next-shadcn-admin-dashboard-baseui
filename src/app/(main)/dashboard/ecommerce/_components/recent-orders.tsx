@@ -80,8 +80,8 @@ export function RecentOrders() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal text-muted-foreground text-sm">Recent Orders</CardTitle>
-        <CardDescription className="text-foreground text-xl tabular-nums leading-none tracking-tight">
+        <CardTitle className="text-muted-foreground text-sm font-normal">Recent Orders</CardTitle>
+        <CardDescription className="text-foreground text-xl leading-none tracking-tight tabular-nums">
           {orderCountDescription}
         </CardDescription>
         <CardAction className="flex items-center gap-1">
@@ -100,7 +100,7 @@ export function RecentOrders() {
       <CardContent className="flex flex-col gap-4 px-0">
         <div className="flex items-center justify-between px-4">
           <ToggleGroup
-            className="bg-muted p-0.75 text-muted-foreground **:data-[slot=toggle-group-item]:rounded-md **:data-[slot=toggle-group-item]:border **:data-[slot=toggle-group-item]:border-transparent **:data-[slot=toggle-group-item]:text-foreground/60 **:data-[slot=toggle-group-item]:hover:text-foreground [&_[data-slot=toggle-group-item][data-pressed]]:bg-background [&_[data-slot=toggle-group-item][data-pressed]]:text-foreground [&_[data-slot=toggle-group-item][data-pressed]]:shadow-sm dark:[&_[data-slot=toggle-group-item][data-pressed]]:border-input dark:[&_[data-slot=toggle-group-item][data-pressed]]:bg-input/30"
+            className="bg-muted text-muted-foreground **:data-[slot=toggle-group-item]:text-foreground/60 **:data-[slot=toggle-group-item]:hover:text-foreground [&_[data-slot=toggle-group-item][data-pressed]]:bg-background [&_[data-slot=toggle-group-item][data-pressed]]:text-foreground dark:[&_[data-slot=toggle-group-item][data-pressed]]:border-input dark:[&_[data-slot=toggle-group-item][data-pressed]]:bg-input/30 p-0.75 **:data-[slot=toggle-group-item]:rounded-md **:data-[slot=toggle-group-item]:border **:data-[slot=toggle-group-item]:border-transparent [&_[data-slot=toggle-group-item][data-pressed]]:shadow-sm"
             onValueChange={(value) => {
               const filter = value[0] as OrderFilter | undefined;
               if (!filter) return;
@@ -129,7 +129,7 @@ export function RecentOrders() {
 
         <div className="overflow-hidden">
           <Table className="**:data-[slot='table-cell']:px-4.5 **:data-[slot='table-head']:px-4.5">
-            <TableHeader className="border-t **:data-[slot='table-head']:h-11 **:data-[slot='table-head']:font-normal **:data-[slot='table-head']:text-foreground **:data-[slot='table-head']:text-sm">
+            <TableHeader className="**:data-[slot='table-head']:text-foreground border-t **:data-[slot='table-head']:h-11 **:data-[slot='table-head']:text-sm **:data-[slot='table-head']:font-normal">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (

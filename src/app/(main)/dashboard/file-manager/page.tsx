@@ -41,7 +41,7 @@ export default async function Page({ searchParams }: PageProps) {
       <FoldersSection folders={folders} />
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="font-medium text-lg">All files</h2>
+          <h2 className="text-lg font-medium">All files</h2>
           <ToggleGroup variant="outline" size="sm" spacing={0} value={[activeView]} aria-label="File view">
             <ToggleGroupItem
               value="grid"

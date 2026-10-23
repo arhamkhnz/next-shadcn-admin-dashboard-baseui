@@ -55,7 +55,7 @@ export function TaskPriorityFilter<TData extends RowData>({ table }: TaskPriorit
         render={
           <Button
             variant="outline"
-            className={cn("border-dashed", selectedValues.size > 0 && "border-solid bg-muted text-foreground")}
+            className={cn("border-dashed", selectedValues.size > 0 && "bg-muted text-foreground border-solid")}
           />
         }
       >
