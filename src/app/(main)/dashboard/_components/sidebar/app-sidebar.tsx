@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 
-import { Command } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
+import { AppLogo } from "@/components/app-logo";
 import {
   Sidebar,
   SidebarContent,
@@ -41,7 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton render={<Link prefetch={false} href="/dashboard/default" />}>
-              <Command />
+              <AppLogo viewBox="72 96 356 308" />
               <span className="text-base font-semibold">{APP_CONFIG.name}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
