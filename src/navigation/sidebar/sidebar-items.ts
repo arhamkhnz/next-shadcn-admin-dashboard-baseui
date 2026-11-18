@@ -1,5 +1,6 @@
 import {
   Banknote,
+  Bitcoin,
   Calendar,
   ChartBar,
   CheckSquare,
@@ -133,6 +134,13 @@ export const sidebarItems: NavGroup[] = [
         title: "Patient Monitoring",
         url: "/dashboard/patient-monitoring",
         icon: HeartPulse,
+      },
+      {
+        id: "crypto",
+        title: "Crypto",
+        url: "/dashboard/crypto",
+        icon: Bitcoin,
+        badge: "new",
       },
     ],
   },
