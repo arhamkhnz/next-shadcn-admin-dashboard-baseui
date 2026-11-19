@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { AccountActivityTable } from "./_components/account-activity";
-import { MarketTrades } from "./_components/market-trades";
-import { OrderBook } from "./_components/order-book";
+import { ExchangeAllocation } from "./_components/exchange-allocation";
+import { ExchangeCard } from "./_components/exchange-card";
+import { MonthlyPnl } from "./_components/monthly-pnl";
 import { PortfolioHoldings } from "./_components/portfolio-holdings";
 import { PriceChart } from "./_components/price-chart";
 import { displayCurrencies } from "./_data/data";
@@ -53,13 +54,10 @@ export default function Page() {
       </div>
       <PortfolioHoldings />
       <PriceChart />
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-12">
-        <div className="min-w-0 lg:col-span-8">
-          <OrderBook />
-        </div>
-        <div className="min-w-0 lg:col-span-4">
-          <MarketTrades />
-        </div>
+      <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <ExchangeAllocation />
+        <ExchangeCard />
+        <MonthlyPnl />
       </div>
       <AccountActivityTable />
     </div>
